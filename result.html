@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Voting Results</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container-bowl">
+    <h1>Live Voting Results</h1>
+    <canvas id="resultChart" width="400" height="200" style="margin-top: 30px;"></canvas>
+
+    <table id="resultTable">
+      <tr><th>Candidate Name</th><th>Total Votes</th></tr>
+    </table>
+    <button class="back-btn" onclick="goBack()">← Back To Home</button>
+  </div>
+
+  <script>
+    function showResults() {
+  const ledger = JSON.parse(localStorage.getItem("ledger") || "[]");
+  const results = {};
+
+  ledger.forEach(vote => {
+    results[vote.candidate] = (results[vote.candidate] || 0) + 1;
+  });
+
+  const table = document.getElementById("resultTable");
+  for (const candidate in results) {
+    const row = table.insertRow();
+    row.insertCell(0).textContent = candidate;
+    row.insertCell(1).textContent = results[candidate];
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const ledger = JSON.parse(localStorage.getItem("ledger") || "[]");
+  const results = {};
+
+  ledger.forEach(vote => {
+    results[vote.candidate] = (results[vote.candidate] || 0) + 1;
+  });
+
+  const labels = Object.keys(results);
+  const voteCounts = Object.values(results);
+
+  if (!document.getElementById('resultChart') || labels.length === 0) return;
+
+  const barColors = [
+    'rgb(237, 99, 99)',
+    'rgba(249, 149, 244, 0.7)',
+    'rgba(180, 254, 177, 0.7)',
+  ];
+   const borderColors = ['black'];
+
+  const backgroundColor = labels.map((_, i) => barColors[i % barColors.length]);
+  const borderColor = labels.map((_, i) => borderColors[i % borderColors.length]);
+
+  const ctx = document.getElementById('resultChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Total Votes',
+        data: voteCounts,
+        backgroundColor: backgroundColor,
+        borderColor: borderColor,
+        borderWidth: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
+        }
+      }
+    }
+  });
+});
+function goBack() {
+  window.location.href = "index.html";
+}
+  </script>
+  <script>
+    showResults();
+  </script>
+</body>
+</html>

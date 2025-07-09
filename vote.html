@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cast Your Vote</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <p>Please, Vote For Your Favorite Candidate!</p>
+    <select id="candidate">
+      <option value="">-- Select Candidate --</option>
+      <option value="Alice">Alice</option>
+      <option value="Bob">Bob</option>
+      <option value="Charlie">Charlie</option>
+    </select>
+    <button onclick="castVote()" style="background: linear-gradient(90deg, #95f79a, #154b1d);">Submit Vote</button>
+    <button class="logout-btn" onclick="logout()" style="background: linear-gradient(90deg, #ecf795, #adb002);">Logout</button>
+  </div>
+
+  <script>
+    function castVote() {
+  const voterName = sessionStorage.getItem("voterName");
+  const voterId = sessionStorage.getItem("voterId");
+  const candidate = document.getElementById("candidate").value;
+  if (!voterId || !candidate) {
+    alert("Missing voter ID or candidate selection.");
+    return;
+  }
+
+  const vote = {
+    voterName,
+    voterId,
+    candidate,
+    timestamp: new Date().toLocaleString(),
+    hash: generateHash(voterId + candidate + Date.now())
+  };
+  let ledger = JSON.parse(localStorage.getItem("ledger") || "[]");
+  if (ledger.some(v => v.voterId === voterId)) {
+    alert("You have already voted.");
+    return;
+  }
+
+  ledger.push(vote);
+  localStorage.setItem("ledger", JSON.stringify(ledger));
+  alert("Your vote has been submitted.");
+  window.location.href = "result.html";
+}
+function generateHash(input) {
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    const chr = input.charCodeAt(i);
+    hash = ((hash << 5) - hash) + chr;
+    hash |= 0;
+  }
+  return hash.toString();
+} 
+function logout() {
+  sessionStorage.clear();
+  window.location.href = "index.html";
+}
+  </script>
+</body>
+</html>

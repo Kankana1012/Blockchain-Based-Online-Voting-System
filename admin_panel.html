@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container-box-bowl">
+    <h1>Admin Voting Dashboard</h1>
+    <h4>Ledger 1. Voter Details</h4>
+    <table id="ledgerTable">
+      <tr>
+        <th>Index</th>
+        <th>Voter ID</th>
+        <th>Candidate</th>
+        <th>Timestamp</th>
+        <th>Hash</th>
+      </tr>
+    </table>
+
+    <h4>Ledger 2. Candidate Summary</h4>
+    <table id="candidateTable">
+      <tr>
+      <th>Candidate Name</th>
+      <th>Total Votes</th>
+      <th>Latest Timestamp</th>
+      <th>Latest Vote Hash</th>
+      </tr>
+    </table>
+
+    <h4>3. Vote Graph</h4>
+    <canvas id="resultChart" width="400" height="200" style="margin-top: 30px;"></canvas>
+
+
+    <button class="reset-btn" onclick="resetLedger()" style="background: linear-gradient(90deg, #f79595, #8e0101);">Reset System</button>
+    <button class="back-btn" onclick="logout()" style="background: linear-gradient(90deg, #ecf795, #adb002);">Logout</button>
+  </div>
+
+  <script>
+    // === Load and display ledger data ===
+function displayLedger() {
+  const ledger = JSON.parse(localStorage.getItem("ledger") || "[]");
+  const table = document.getElementById("ledgerTable");
+
+  let index = 1;
+  ledger.forEach(vote => {
+    const row = table.insertRow();
+    row.insertCell(0).textContent = index++;
+    row.insertCell(1).textContent = vote.voterId;
+    row.insertCell(2).textContent = vote.candidate;
+    row.insertCell(3).textContent = vote.timestamp;
+    row.insertCell(4).textContent = vote.hash;
+  });
+}
+
+// === Load and display candidate summary ===
+function displayCandidateSummary() {
+  const ledger = JSON.parse(localStorage.getItem("ledger") || "[]");
+  const summary = {};
+
+  ledger.forEach(vote => {
+    const candidate = vote.candidate;
+    if (!summary[candidate]) {
+      summary[candidate] = {
+        count: 1,
+        timestamp: vote.timestamp,
+        hash: vote.hash
+      };
+    } else {
+      summary[candidate].count += 1;
+      summary[candidate].timestamp = vote.timestamp;
+      summary[candidate].hash = vote.hash;
+    }
+  });
+
+  const table = document.getElementById("candidateTable");
+  for (const candidate in summary) {
+    const row = table.insertRow();
+    row.insertCell(0).textContent = candidate;
+    row.insertCell(1).textContent = summary[candidate].count;
+    row.insertCell(2).textContent = summary[candidate].timestamp;
+    row.insertCell(3).textContent = summary[candidate].hash;
+  }
+}
+
+// === Reset system ===
+function resetLedger() {
+  if (confirm("Are you sure you want to reset all votes and data?")) {
+    localStorage.clear();
+    alert("Ledger has been reset.");
+    location.reload();
+  }
+}
+
+// === Display vote graph ===
+window.onload = function () {
+  const votes = JSON.parse(localStorage.getItem("ledger")) || [];
+
+  const voteCounts = {};
+
+  // Dynamically create voteCounts from the ledger instead of candidates
+  votes.forEach(vote => {
+    const candidate = vote.candidate?.trim();
+    if (!voteCounts[candidate]) {
+      voteCounts[candidate] = 1;
+    } else {
+      voteCounts[candidate]++;
+    }
+  });
+  const labels = Object.keys(voteCounts);
+  const data = Object.values(voteCounts);
+
+  if (!labels.length) return; // nothing to show
+
+  const ctx = document.getElementById("resultChart").getContext("2d");
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Votes",
+        data: data,
+        backgroundColor: ["rgb(237, 99, 99)","rgba(249, 149, 244, 0.7)","rgba(180, 254, 177, 0.7)"],
+        borderColor: ["black"],
+        borderWidth: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
+        }
+      }
+    }
+  });
+};
+
+  </script>
+  <script>
+    function logout() {
+      window.location.href = "index.html";
+    }
+    displayLedger();
+    displayCandidateSummary();
+  </script>
+</body>
+</html>

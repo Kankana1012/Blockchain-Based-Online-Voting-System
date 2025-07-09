@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="content-box">
+      <h3>Admin Panel Login</h3>
+    </div>
+
+    <div>
+      <input type="text" id="adminUser" placeholder="Username" required />
+      <input type="password" id="adminPass" placeholder="Password" required />
+      <button onclick="validateAdmin()">Login</button>
+    </div>
+  </div>
+
+  <script>
+    function validateAdmin() {
+      const username = document.getElementById("adminUser").value;
+      const password = document.getElementById("adminPass").value;
+
+      if (username === "admin" && password === "admin1234") {
+        window.location.href = "admin_panel.html"; // replace with actual admin panel file
+      } else {
+        alert("Invalid credentials. Please try again.");
+      }
+    }
+  </script>
+</body>
+</html>

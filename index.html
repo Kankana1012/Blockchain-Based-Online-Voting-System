@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blockchain Online Voting Login</title>
+  <link rel="stylesheet" href="style.css" />
+  
+</head>
+<body>
+  <div class="container">
+    <div class="content-box">
+      <h1>Welcome</h1>
+      <h2>Online Voting System</h2>
+      
+    </div>
+    <button onclick="showVoterLogin()">Voter Login</button>
+    <button id="adminBtn" onclick="goToAdminLogin()">Admin Login</button>
+    <div id="loginForm" style="display: none;">
+      <h1>Voter Login</h1>
+      <input type="text" id="voterName" placeholder="Enter Voter Name" required />
+
+      <input type="text" id="voterId" placeholder="Enter Voter ID" required />
+      <button onclick="login()" style="background: linear-gradient(90deg, #95f79a, #154b1d);">Proceed To Vote</button>
+    </div>
+  </div>
+
+  <script>
+    function showVoterLogin() {
+      document.getElementById("loginForm").style.display = "block";
+      document.querySelector('button[onclick="showVoterLogin()"]').style.display = "none"; // hide Voter Login button
+      document.getElementById("adminBtn").style.display = "none";
+      document.querySelector('.content-box').style.display = "none";
+    }
+    function goToAdminLogin() {
+      window.location.href = "admin.html"; // change if your admin page has another name
+    }
+    function login() {
+
+      const voterName = document.getElementById("voterName").value;
+      
+      const voterId = document.getElementById("voterId").value;
+
+      if (!voterName) {
+        alert("Please enter your name");
+        return;
+      }
+
+      if (!voterId) {
+        alert("Please enter your Voter ID");
+        return;
+      }
+      sessionStorage.setItem("voterId", voterId);
+      sessionStorage.setItem("voterName", voterName);
+      window.location.href = "vote.html";
+    }
+    function logout() {
+  window.location.href = "index.html";
+}
+
+function goBack() {
+  window.location.href = "index.html";
+}
+  </script>
+</body>
+</html>
