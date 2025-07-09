@@ -41,7 +41,7 @@ Blockchain Based Online Voting System is a dynamic web application that reimagin
 
 1. **Clone the repository**:
    
-   git clone ([https://github.com/Kankana1012/Blockchain-Based-Online-Voting-System.git](https://github.com/Kankana1012/Blockchain-Based-Online-Voting-System.git))
+   git clone ([https://github.com/Kankana1012/Blockchain-Based-Online-Voting-System.git] https://github.com/Kankana1012/Blockchain-Based-Online-Voting-System.git
    
 
 2. **Open `index.html`** in your browser.
