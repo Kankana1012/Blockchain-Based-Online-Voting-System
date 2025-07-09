@@ -62,7 +62,7 @@ Blockchain Based Online Voting System is a dynamic web application that reimagin
 ## 📸 Screenshots
 
 #### 🏠 Home Page
-![Home Page](Images/Screenshot_index.png)
+![Home Page](Images/Home Page.png)
 
 ### 🔐 Voter Login Page
 ![Voter Login](screenshots/voter_login.png)
